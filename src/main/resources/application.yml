@@ -6,4 +6,8 @@ spring:
     url: jdbc:mysql://localhost:3306/vollmed_api?useSSL=false&serverTimezone=UTC
     username: root
     password: 123456
+
+server:
+  error:
+    include-stacktrace: never
     
