@@ -1,4 +1,4 @@
-package med.voll.api.security;
+package med.voll.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
