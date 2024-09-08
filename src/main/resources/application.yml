@@ -11,6 +11,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
 server:
   error:
     include-stacktrace: never
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:yqWhuO;JrmbW=2W8o0N#EBTLxZi4Sbe4aAv#-F'x1]A&',&^lm}
