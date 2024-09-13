@@ -1,7 +1,7 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
-import med.voll.api.dto.AccessTokenDto;
+import med.voll.api.dto.TokenDto;
 import med.voll.api.dto.LoginDto;
 import med.voll.api.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping
-    public ResponseEntity<AccessTokenDto> checkLogin(@RequestBody @Valid LoginDto login) {
-        return ResponseEntity.ok(new AccessTokenDto(loginService.checkLogin(login.login(), login.senha())));
+    public ResponseEntity<TokenDto> checkLogin(@RequestBody @Valid LoginDto login) {
+        return ResponseEntity.ok(new TokenDto(loginService.checkLogin(login.login(), login.senha())));
     }
 }
