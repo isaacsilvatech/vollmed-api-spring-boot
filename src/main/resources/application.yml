@@ -5,7 +5,7 @@ server:
 
 spring:
   # Configurações da aplicação
-  application.name: api
+  application.name: vollmed_api
 
   # Configurações do MVC
   mvc.servlet.path:  /api
