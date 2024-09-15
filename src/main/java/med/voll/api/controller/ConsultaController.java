@@ -2,21 +2,27 @@ package med.voll.api.controller;
 
 import med.voll.api.dto.ConsultaDetaisDto;
 import med.voll.api.dto.ConsultaDto;
+import med.voll.api.service.ConsultaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/consulta")
 public class ConsultaController {
 
-    @PostMapping
-    public ResponseEntity<ConsultaDetaisDto> agendar(@RequestBody ConsultaDto consultaDto) {
+    @Autowired
+    private ConsultaService consultaService;
 
-        System.out.println(consultaDto.data());
-        return ResponseEntity.ok(new ConsultaDetaisDto(null, null, null, null));
+    @PostMapping
+    public ResponseEntity<ConsultaDetaisDto> agendar(@RequestBody ConsultaDto consultaDto, UriComponentsBuilder uriComponentsBuilder) {
+        var consulta = consultaService.agendar(consultaDto.idPaciente(), consultaDto.idMedico(), consultaDto.especialidade(), consultaDto.data());
+        var uri = uriComponentsBuilder.path("/consulta/{id}").buildAndExpand(consulta.getId()).toUri();
+        return ResponseEntity.created(uri).body(new ConsultaDetaisDto(consulta));
     }
 
 }

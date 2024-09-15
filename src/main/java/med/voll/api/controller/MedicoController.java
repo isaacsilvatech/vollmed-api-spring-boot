@@ -27,27 +27,27 @@ public class MedicoController {
     @PostMapping
     @Transactional
     public ResponseEntity<MedicoDetailsDto> create(@RequestBody @Valid MedicoDto medicoDto, UriComponentsBuilder uriComponentsBuilder) {
-        Medico medico = medicoRepository.save(new Medico(medicoDto));
-        URI uri = uriComponentsBuilder.path("/medico/{id}").buildAndExpand(medico.getId()).toUri();
+        var medico = medicoRepository.save(new Medico(medicoDto));
+        var uri = uriComponentsBuilder.path("/medico/{id}").buildAndExpand(medico.getId()).toUri();
         return ResponseEntity.created(uri).body(new MedicoDetailsDto(medico));
     }
 
     @GetMapping
     public ResponseEntity<PagedModel<MedicoListDto>> getList(Pageable pageable) {
-        PagedModel<MedicoListDto> pagedModel = new PagedModel<>(medicoRepository.findAllByAtivoTrue(pageable).map(MedicoListDto::new));
+        var pagedModel = new PagedModel<>(medicoRepository.findAllByAtivoTrue(pageable).map(MedicoListDto::new));
         return ResponseEntity.ok(pagedModel);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<MedicoDetailsDto> getById(@PathVariable Long id) {
-        Medico medico = medicoRepository.getReferenceById(id);
+        var medico = medicoRepository.getReferenceById(id);
         return ResponseEntity.ok(new MedicoDetailsDto(medico));
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<MedicoDetailsDto> update(@RequestBody @Valid MedicoUpdateDto medicoUpdateDto) {
-        Medico medico = medicoRepository.getReferenceById(medicoUpdateDto.id());
+        var medico = medicoRepository.getReferenceById(medicoUpdateDto.id());
         medico.update(medicoUpdateDto);
         return ResponseEntity.ok(new MedicoDetailsDto(medico));
     }
@@ -55,7 +55,7 @@ public class MedicoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Medico medico = medicoRepository.getReferenceById(id);
+        var medico = medicoRepository.getReferenceById(id);
         medico.inativar();
         return ResponseEntity.noContent().build();
     }

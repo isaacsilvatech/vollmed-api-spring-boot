@@ -25,7 +25,7 @@ public class TokenService {
 
     public String genarateAccessToken(Usuario usuario) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+            var algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer(issuer)
                     .withSubject(String.valueOf(usuario.getLogin()))
@@ -41,7 +41,7 @@ public class TokenService {
     }
 
     public String getSubject(@NotNull String token) {
-        Algorithm algorithm = Algorithm.HMAC256(secret);
+        var algorithm = Algorithm.HMAC256(secret);
         return JWT.require(algorithm)
                 .withIssuer(issuer)
                 .build()

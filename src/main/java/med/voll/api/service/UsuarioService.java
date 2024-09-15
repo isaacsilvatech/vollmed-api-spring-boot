@@ -20,7 +20,7 @@ public class UsuarioService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByLogin(login).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        var usuario = usuarioRepository.findByLogin(login).orElseThrow(() -> new EntityNotFoundException("User not found"));
         return new UsuarioLogado(usuario, List.of());
     }
 }

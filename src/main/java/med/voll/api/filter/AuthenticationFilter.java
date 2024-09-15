@@ -33,7 +33,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = getToken(request);
             if (Objects.nonNull(token)) {
-                String login = tokenService.getSubject(token);
+                var login = tokenService.getSubject(token);
                 var usuarioLogado = (UsuarioLogado) usuarioService.loadUserByUsername(login);
                 var authentication = new UsernamePasswordAuthenticationToken(usuarioLogado, null, usuarioLogado.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -45,7 +45,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
+        var bearerToken = request.getHeader("Authorization");
         if (Objects.nonNull(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.replace("Bearer ", "").trim();
         }

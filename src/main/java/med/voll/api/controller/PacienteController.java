@@ -27,26 +27,26 @@ public class PacienteController {
     @PostMapping
     @Transactional
     public ResponseEntity<PacienteDetailsDto> create(@RequestBody @Valid PacienteDto pacienteDto, UriComponentsBuilder uriComponentsBuilder) {
-        Paciente paciente = pacienteRepository.save(new Paciente(pacienteDto));
-        URI uri = uriComponentsBuilder.path("/paciente/{id}").buildAndExpand(paciente.getId()).toUri();
+        var paciente = pacienteRepository.save(new Paciente(pacienteDto));
+        var uri = uriComponentsBuilder.path("/paciente/{id}").buildAndExpand(paciente.getId()).toUri();
         return ResponseEntity.created(uri).body(new PacienteDetailsDto(paciente));
     }
 
     @GetMapping
     public ResponseEntity<PagedModel<PacienteListDto>> getList(Pageable pageable) {
-        PagedModel<PacienteListDto> pagedModel = new PagedModel<>(pacienteRepository.findAllByAtivoTrue(pageable).map(PacienteListDto::new));
+        var pagedModel = new PagedModel<>(pacienteRepository.findAllByAtivoTrue(pageable).map(PacienteListDto::new));
         return ResponseEntity.ok(pagedModel);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PacienteDetailsDto> getById(@PathVariable Long id) {
-        Paciente paciente = pacienteRepository.getReferenceById(id);
+        var paciente = pacienteRepository.getReferenceById(id);
         return ResponseEntity.ok(new PacienteDetailsDto(paciente));
     }
 
     @PutMapping
     public ResponseEntity<PacienteDetailsDto> update(@RequestBody @Valid PacienteUpdateDto pacienteUpdateDto) {
-        Paciente paciente = pacienteRepository.getReferenceById(pacienteUpdateDto.id());
+        var paciente = pacienteRepository.getReferenceById(pacienteUpdateDto.id());
         paciente.update(pacienteUpdateDto);
         return ResponseEntity.ok(new PacienteDetailsDto(paciente));
     }
@@ -54,7 +54,7 @@ public class PacienteController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Paciente paciente = pacienteRepository.getReferenceById(id);
+        var paciente = pacienteRepository.getReferenceById(id);
         paciente.inativar();
         return ResponseEntity.noContent().build();
     }
