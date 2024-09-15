@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,26 +27,51 @@ import java.util.TimeZone;
 @Configuration
 public class JacksonConfig {
 
-    @Value("${spring.jackson.locale}")
-    private String locale;
+    @Value("${spring.jackson.locale:pt-BR}")
+    private String localeConf;
 
-    @Value("${spring.jackson.time-zone}")
-    private String timeZone;
+    @Value("${spring.jackson.time-zone:America/Sao_Paulo}")
+    private String timeZoneConf;
 
-    @Value("${spring.jackson.format.date}")
-    private String dateFormat;
+    private Locale locale;
+    private TimeZone timeZone;
 
-    @Value("${spring.jackson.format.time}")
-    private String timeFormat;
+    private static final String DATE_TIME_SECOND_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    private static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";
+    private static final String DATE_FORMAT = "dd/MM/yyyy";
+    private static final String TIME_SECOND_FORMAT = "HH:mm:ss";
+    private static final String TIME_FORMAT = "HH:mm";
 
-    @Value("${spring.jackson.format.time-second}")
-    private String timeSecondFormat;
+    private DateTimeFormatter dateTimeSecondFormatter;
+    private DateTimeFormatter dateTimeFormatter;
+    private DateTimeFormatter dateFormatter;
+    private DateTimeFormatter timeSecondFormatter;
+    private DateTimeFormatter timeFormatter;
 
-    @Value("${spring.jackson.format.date-time}")
-    private String dateTimeFormat;
+    private SimpleDateFormat simpleDateTimeSecondFormat;
+    private SimpleDateFormat simpleDateTimeFormat;
+    private SimpleDateFormat simpleDateFormat;
+    private SimpleDateFormat simpleTimeSecondFormat;
+    private SimpleDateFormat simpleTimeFormat;
 
-    @Value("${spring.jackson.format.date-time-second}")
-    private String dateTimeSecondFormat;
+    @PostConstruct
+    public void init() {
+        locale = Locale.forLanguageTag(localeConf);
+        timeZone = TimeZone.getTimeZone(timeZoneConf);
+        TimeZone.setDefault(timeZone);
+
+        dateTimeSecondFormatter = createFormatter(DATE_TIME_SECOND_FORMAT);
+        dateTimeFormatter = createFormatter(DATE_TIME_FORMAT);
+        dateFormatter = createFormatter(DATE_FORMAT);
+        timeSecondFormatter = createFormatter(TIME_SECOND_FORMAT);
+        timeFormatter = createFormatter(TIME_FORMAT);
+
+        simpleDateTimeSecondFormat = createDateFormat(DATE_TIME_SECOND_FORMAT);
+        simpleDateTimeFormat = createDateFormat(DATE_TIME_FORMAT);
+        simpleDateFormat = createDateFormat(DATE_FORMAT);
+        simpleTimeSecondFormat = createDateFormat(TIME_SECOND_FORMAT);
+        simpleTimeFormat = createDateFormat(TIME_FORMAT);
+    }
 
     @Bean
     public ObjectMapper objectMapper() {
@@ -55,22 +81,17 @@ public class JacksonConfig {
 
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Date.class, new JacksonDateDeserializer(List.of(
-                createDateFormat(dateTimeSecondFormat),
-                createDateFormat(dateTimeFormat),
-                createDateFormat(dateFormat),
-                createDateFormat(timeSecondFormat),
-                createDateFormat(timeFormat)
+                simpleDateTimeSecondFormat,
+                simpleDateTimeFormat,
+                simpleDateFormat,
+                simpleTimeSecondFormat,
+                simpleTimeFormat
         )));
-        module.addSerializer(Date.class, new DateSerializer(false, createDateFormat(dateTimeFormat)));
+        module.addSerializer(Date.class, new DateSerializer(false, simpleDateTimeFormat));
         mapper.registerModule(module);
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat, Locale.of(locale));
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimeFormat, Locale.of(locale));
-        DateTimeFormatter dateTimeSecondFormatter = DateTimeFormatter.ofPattern(dateTimeSecondFormat, Locale.of(locale));
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(timeFormat, Locale.of(locale));
-        DateTimeFormatter timeSecondFormatter = DateTimeFormatter.ofPattern(timeSecondFormat, Locale.of(locale));
-
         JavaTimeModule javaTimeModule = new JavaTimeModule();
+
         javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(dateFormatter));
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(dateFormatter));
         javaTimeModule.addDeserializer(LocalDateTime.class, new JacksonLocalDateTimeDeserializer(List.of(
@@ -89,9 +110,13 @@ public class JacksonConfig {
     }
 
     private SimpleDateFormat createDateFormat(String pattern) {
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.of(locale));
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, locale);
         sdf.setLenient(false);
-        sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+        sdf.setTimeZone(timeZone);
         return sdf;
+    }
+
+    private DateTimeFormatter createFormatter(String pattern) {
+        return DateTimeFormatter.ofPattern(pattern, locale);
     }
 }
