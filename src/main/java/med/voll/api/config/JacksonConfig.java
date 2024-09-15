@@ -30,17 +30,26 @@ public class JacksonConfig {
     @Value("${spring.jackson.locale:pt-BR}")
     private String localeConf;
 
-    @Value("${spring.jackson.time-zone:America/Sao_Paulo}")
+    @Value("${spring.jackson.time-zon:America/Sao_Paulo}")
     private String timeZoneConf;
+
+    @Value("${spring.jackson.format.date:dd/MM/yyyy}")
+    private String dateFormatConf;
+
+    @Value("${spring.jackson.format.time:HH:mm}")
+    private String timeFormatConf;
+
+    @Value("${spring.jackson.format.time-second:HH:mm:ss}")
+    private String timeSecondFormatConf;
+
+    @Value("${spring.jackson.format.date-time:dd/MM/yyyy HH:mm}")
+    private String dateTimeFormatConf;
+
+    @Value("${spring.jackson.format.date-time-second: dd/MM/yyyy HH:mm:ss}")
+    private String dateTimeSecondFormatConf;
 
     private Locale locale;
     private TimeZone timeZone;
-
-    private static final String DATE_TIME_SECOND_FORMAT = "dd/MM/yyyy HH:mm:ss";
-    private static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";
-    private static final String DATE_FORMAT = "dd/MM/yyyy";
-    private static final String TIME_SECOND_FORMAT = "HH:mm:ss";
-    private static final String TIME_FORMAT = "HH:mm";
 
     private DateTimeFormatter dateTimeSecondFormatter;
     private DateTimeFormatter dateTimeFormatter;
@@ -58,19 +67,18 @@ public class JacksonConfig {
     public void init() {
         locale = Locale.forLanguageTag(localeConf);
         timeZone = TimeZone.getTimeZone(timeZoneConf);
-        TimeZone.setDefault(timeZone);
 
-        dateTimeSecondFormatter = createFormatter(DATE_TIME_SECOND_FORMAT);
-        dateTimeFormatter = createFormatter(DATE_TIME_FORMAT);
-        dateFormatter = createFormatter(DATE_FORMAT);
-        timeSecondFormatter = createFormatter(TIME_SECOND_FORMAT);
-        timeFormatter = createFormatter(TIME_FORMAT);
+        dateTimeSecondFormatter = createFormatter(dateTimeSecondFormatConf);
+        dateTimeFormatter = createFormatter(dateTimeFormatConf);
+        dateFormatter = createFormatter(dateFormatConf);
+        timeSecondFormatter = createFormatter(timeSecondFormatConf);
+        timeFormatter = createFormatter(timeFormatConf);
 
-        simpleDateTimeSecondFormat = createDateFormat(DATE_TIME_SECOND_FORMAT);
-        simpleDateTimeFormat = createDateFormat(DATE_TIME_FORMAT);
-        simpleDateFormat = createDateFormat(DATE_FORMAT);
-        simpleTimeSecondFormat = createDateFormat(TIME_SECOND_FORMAT);
-        simpleTimeFormat = createDateFormat(TIME_FORMAT);
+        simpleDateTimeSecondFormat = createDateFormat(dateTimeSecondFormatConf);
+        simpleDateTimeFormat = createDateFormat(dateTimeFormatConf);
+        simpleDateFormat = createDateFormat(dateFormatConf);
+        simpleTimeSecondFormat = createDateFormat(timeSecondFormatConf);
+        simpleTimeFormat = createDateFormat(timeFormatConf);
     }
 
     @Bean

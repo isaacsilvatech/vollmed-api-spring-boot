@@ -1,35 +1,41 @@
-# Configurações de Jackson
+# ConfiguraÃ§Ãµes do servidor
+server:
+  servlet.context-path: /vollmed
+  error.include-stacktrace: never
+
 spring:
+  # ConfiguraÃ§Ãµes da aplicaÃ§Ã£o
+  application.name: api
+
+  # ConfiguraÃ§Ãµes do MVC
+  mvc.servlet.path:  /api
+
+  # ConfiguraÃ§Ãµes de Jackson
   jackson:
     time-zone: America/Sao_Paulo
     locale: pt-BR
+    serialization.write-dates-as-timestamps: false
+    format:
+      date: dd/MM/yyyy
+      time: HH:mm
+      time-second: HH:mm:ss
+      date-time: dd/MM/yyyy HH:mm
+      date-time-second: dd/MM/yyyy HH:mm:ss
 
-  # Configurações da aplicação
-  application:
-    name: api
-
-  # Configurações do DataSource
+  # ConfiguraÃ§Ãµes do DataSource
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/vollmed_api?useSSL=false&serverTimezone=UTC
     username: root
     password: 123456
 
-  # Configurações do JPA
+  # ConfiguraÃ§Ãµes do JPA
   jpa:
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+    properties.hibernate.format_sql: true
 
-# Configurações do servidor
-server:
-  error:
-    include-stacktrace: never
-
-# Configurações da API Security
-api:
-  security:
+# ConfiguraÃ§Ãµes da API Security
+api.security:
     token:
-      secret: ${JWT_SECRET:yqWhuO;JrmbW=2W8o0N#EBTLxZi4Sbe4aAv#-F'x1]A&',&^lm}
+      secret: '${JWT_SECRET:yqWhuO;JrmbW=2W8o0N#EBTLxZi4Sbe4aAv#-F}'
       issuer: vollmed_api
