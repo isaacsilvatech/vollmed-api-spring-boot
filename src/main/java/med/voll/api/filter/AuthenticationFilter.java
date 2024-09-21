@@ -39,7 +39,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             filterChain.doFilter(request, response);
-        } catch (JWTVerificationException | EntityNotFoundException ex) {
+        } catch (JWTVerificationException ex) {
             throw new BadCredentialsException(ex.getMessage(), ex);
         }
     }

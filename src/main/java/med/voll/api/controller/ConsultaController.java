@@ -1,5 +1,7 @@
 package med.voll.api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import med.voll.api.dto.ConsultaDetaisDto;
 import med.voll.api.dto.ConsultaDto;
 import med.voll.api.service.ConsultaService;
@@ -13,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/consulta")
+@SecurityRequirement(name = "bearer-key")
 public class ConsultaController {
 
     @Autowired
