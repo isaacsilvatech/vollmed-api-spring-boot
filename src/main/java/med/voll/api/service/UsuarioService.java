@@ -1,7 +1,6 @@
 package med.voll.api.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import med.voll.api.model.Usuario;
 import med.voll.api.model.UsuarioLogado;
 import med.voll.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

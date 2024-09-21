@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import med.voll.api.dto.ConsultaDto;
 
 import java.time.LocalDateTime;
 
@@ -28,5 +29,11 @@ public class Consulta {
     @JoinColumn(name = "medico_id")
     private Medico medico;
 
-    LocalDateTime data;
+    private LocalDateTime data;
+
+    public Consulta(Paciente paciente, Medico medico, LocalDateTime data) {
+        this.paciente = paciente;
+        this.medico = medico;
+        this.data = data;
+    }
 }

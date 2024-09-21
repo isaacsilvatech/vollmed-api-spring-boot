@@ -1,19 +1,26 @@
 package med.voll.api.service;
 
+import med.voll.api.dto.ConsultaDto;
 import med.voll.api.exception.ValidationException;
 import med.voll.api.model.Consulta;
 import med.voll.api.model.Especialidade;
 import med.voll.api.model.Medico;
+import med.voll.api.repository.ConsultaRepository;
 import med.voll.api.repository.MedicoRepository;
 import med.voll.api.repository.PacienteRepository;
+import med.voll.api.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Service
 public class ConsultaService {
+
+    @Autowired
+    private ConsultaRepository consultaRepository;
 
     @Autowired
     private PacienteRepository pacienteRepository;
@@ -21,18 +28,24 @@ public class ConsultaService {
     @Autowired
     private MedicoRepository medicoRepository;
 
-    public Consulta agendar(Long idPaciente, Long idMedico, Especialidade especialidade, LocalDateTime data) {
-        if (!pacienteRepository.existsById(idPaciente)) {
+    @Autowired
+    List<Validator<ConsultaDto>> consultaDtoValidators;
+
+    public Consulta agendar(ConsultaDto consultaDto) {
+        if (!pacienteRepository.existsById(consultaDto.idPaciente())) {
             throw new ValidationException("Id do paciente informado não existe!");
         }
-        if (!medicoRepository.existsById(idMedico)) {
+        if (!medicoRepository.existsById(consultaDto.idMedico())) {
             throw new ValidationException("Id do médico informado não existe!");
         }
 
-        var paciente = pacienteRepository.getReferenceById(idPaciente);
-        var medico = getMedico(idMedico, especialidade, data);
+        consultaDtoValidators.forEach(v -> v.validate(consultaDto));
 
-        return null;
+        var paciente = pacienteRepository.getReferenceById(consultaDto.idPaciente());
+        var medico = getMedico(consultaDto.idMedico(), consultaDto.especialidade(), consultaDto.data());
+        var consulta = new Consulta(paciente, medico, consultaDto.data());
+
+        return consultaRepository.save(consulta);
     }
 
     private Medico getMedico(Long idMedico, Especialidade especialidade, LocalDateTime data) {
