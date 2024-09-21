@@ -10,18 +10,6 @@ spring:
   # Configurações do MVC
   mvc.servlet.path:  /api
 
-  # Configurações de Jackson
-  jackson:
-    time-zone: America/Sao_Paulo
-    locale: pt-BR
-    serialization.write-dates-as-timestamps: false
-    format:
-      date: dd/MM/yyyy
-      time: HH:mm
-      time-second: HH:mm:ss
-      date-time: dd/MM/yyyy HH:mm
-      date-time-second: dd/MM/yyyy HH:mm:ss
-
   # Configurações do DataSource
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
