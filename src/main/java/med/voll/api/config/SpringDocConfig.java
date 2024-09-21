@@ -25,3 +25,4 @@ public class SpringDocConfig {
                                 .email("backend@voll.med")));
     }
 }
+
