@@ -1,5 +1,6 @@
 package med.voll.api.service;
 
+import med.voll.api.dto.ConsultaCancelarDto;
 import med.voll.api.dto.ConsultaDto;
 import med.voll.api.exception.ValidationException;
 import med.voll.api.model.Consulta;
@@ -20,6 +21,12 @@ import java.util.Objects;
 public class ConsultaService {
 
     @Autowired
+    List<Validator<ConsultaDto>> consultaDtoValidators;
+
+    @Autowired
+    List<Validator<ConsultaCancelarDto>> consultaCancelarDtoValidators;
+
+    @Autowired
     private ConsultaRepository consultaRepository;
 
     @Autowired
@@ -27,9 +34,6 @@ public class ConsultaService {
 
     @Autowired
     private MedicoRepository medicoRepository;
-
-    @Autowired
-    List<Validator<ConsultaDto>> consultaDtoValidators;
 
     public Consulta agendar(ConsultaDto consultaDto) {
         if (!pacienteRepository.existsById(consultaDto.idPaciente())) {
@@ -56,5 +60,11 @@ public class ConsultaService {
             throw new ValidationException("Especialidade é obrigatória quando médico não for escolhido!");
         }
         return medicoRepository.findFirstRandomByEspecialidadeAndFreeData(especialidade, data);
+    }
+
+    public void cancelar(ConsultaCancelarDto consultaCancelarDto) {
+        var consulta = consultaRepository.findById(consultaCancelarDto.id()).orElseThrow(() -> new ValidationException("Consulta não encontrada!"));
+        consultaCancelarDtoValidators.forEach(v -> v.validate(consultaCancelarDto));
+        consulta.cancelar(consultaCancelarDto.motivoCancelamento());
     }
 }

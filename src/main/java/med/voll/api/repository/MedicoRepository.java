@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 
 public interface MedicoRepository extends JpaRepository<Medico, Long> {
 
-    Page<Medico> findAllByAtivoTrue(Pageable pageable);
-
     @Query("""
             select
                 m
@@ -21,13 +19,16 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
                 left join Consulta c on c.medico = m
             where
                 m.ativo = true
-                and c.data <> :data
                 and m.especialidade = :especialidade
+                and c.data <> :data
+                and c.motivoCancelamento is null
             order by
                 rand()
             limit 1
             """)
     Medico findFirstRandomByEspecialidadeAndFreeData(Especialidade especialidade, LocalDateTime data);
+
+    Page<Medico> findAllByAtivoTrue(Pageable pageable);
 
     @Query("""
             select
