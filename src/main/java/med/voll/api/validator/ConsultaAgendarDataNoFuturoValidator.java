@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class ConsultaAgendarDataNoFuturoValidator implements Validator<ConsultaDto> {
+public class ConsultaAgendarDataNoFuturoValidator implements ConsultaAgendarValidator {
 
     @Override
     public void validate(ConsultaDto consultaDto) throws ValidationException {

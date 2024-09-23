@@ -9,7 +9,8 @@ import med.voll.api.model.Medico;
 import med.voll.api.repository.ConsultaRepository;
 import med.voll.api.repository.MedicoRepository;
 import med.voll.api.repository.PacienteRepository;
-import med.voll.api.validator.Validator;
+import med.voll.api.validator.ConsultaAgendarValidator;
+import med.voll.api.validator.ConsultaCancelarValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,6 @@ import java.util.Objects;
 public class ConsultaService {
 
     @Autowired
-    List<Validator<ConsultaDto>> consultaDtoValidators;
-
-    @Autowired
-    List<Validator<ConsultaCancelarDto>> consultaCancelarDtoValidators;
-
-    @Autowired
     private ConsultaRepository consultaRepository;
 
     @Autowired
@@ -34,6 +29,12 @@ public class ConsultaService {
 
     @Autowired
     private MedicoRepository medicoRepository;
+
+    @Autowired
+    private List<ConsultaAgendarValidator> consultaAgendarValidators;
+
+    @Autowired
+    private List<ConsultaCancelarValidator> consultaCancelarValidators;
 
     public Consulta agendar(ConsultaDto consultaDto) {
         if (!pacienteRepository.existsById(consultaDto.idPaciente())) {
@@ -43,7 +44,7 @@ public class ConsultaService {
             throw new ValidationException("Id do médico informado não existe!");
         }
 
-        consultaDtoValidators.forEach(v -> v.validate(consultaDto));
+        consultaAgendarValidators.forEach(v -> v.validate(consultaDto));
 
         var paciente = pacienteRepository.getReferenceById(consultaDto.idPaciente());
         var medico = getMedico(consultaDto.idMedico(), consultaDto.especialidade(), consultaDto.data());
@@ -64,7 +65,7 @@ public class ConsultaService {
 
     public void cancelar(ConsultaCancelarDto consultaCancelarDto) {
         var consulta = consultaRepository.findById(consultaCancelarDto.id()).orElseThrow(() -> new ValidationException("Consulta não encontrada!"));
-        consultaCancelarDtoValidators.forEach(v -> v.validate(consultaCancelarDto));
+        consultaCancelarValidators.forEach(v -> v.validate(consultaCancelarDto));
         consulta.cancelar(consultaCancelarDto.motivoCancelamento());
     }
 }

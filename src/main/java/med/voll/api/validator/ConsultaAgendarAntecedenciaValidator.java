@@ -8,7 +8,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Component
-public class ConsultaAgendarAntecedenciaValidator implements Validator<ConsultaDto> {
+public class ConsultaAgendarAntecedenciaValidator implements ConsultaAgendarValidator {
 
     @Override
     public void validate(ConsultaDto consultaDto) throws ValidationException {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 @Component
-public class ConsultaAgendarMedicoInativoValidator implements Validator<ConsultaDto> {
+public class ConsultaAgendarMedicoInativoValidator implements ConsultaAgendarValidator {
 
     @Autowired
     private MedicoRepository medicoRepository;

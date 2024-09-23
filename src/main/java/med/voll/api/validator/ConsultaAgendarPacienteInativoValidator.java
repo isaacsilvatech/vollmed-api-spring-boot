@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Component
-public class ConsultaAgendarPacienteInativoValidator implements Validator<ConsultaDto> {
+public class ConsultaAgendarPacienteInativoValidator implements ConsultaAgendarValidator {
 
     @Autowired
     private PacienteRepository pacienteRepository;

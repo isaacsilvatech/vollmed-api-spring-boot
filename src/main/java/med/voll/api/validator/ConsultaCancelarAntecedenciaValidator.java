@@ -1,7 +1,6 @@
 package med.voll.api.validator;
 
 import med.voll.api.dto.ConsultaCancelarDto;
-import med.voll.api.dto.ConsultaDto;
 import med.voll.api.exception.ValidationException;
 import med.voll.api.model.Consulta;
 import med.voll.api.repository.ConsultaRepository;
@@ -12,7 +11,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Component
-public class ConsultaCancelarAntecedenciaValidator implements Validator<ConsultaCancelarDto> {
+public class ConsultaCancelarAntecedenciaValidator implements ConsultaCancelarValidator {
 
     @Autowired
     private ConsultaRepository consultaRepository;

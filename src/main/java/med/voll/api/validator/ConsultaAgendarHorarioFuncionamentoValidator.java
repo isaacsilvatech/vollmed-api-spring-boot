@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.time.DayOfWeek;
 
 @Component
-public class ConsultaAgendarHorarioFuncionamentoValidator implements Validator<ConsultaDto> {
+public class ConsultaAgendarHorarioFuncionamentoValidator implements ConsultaAgendarValidator {
 
     @Override
     public void validate(ConsultaDto consultaDto) throws ValidationException {
