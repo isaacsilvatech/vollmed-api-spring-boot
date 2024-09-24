@@ -63,9 +63,10 @@ public class ConsultaService {
         return medicoRepository.findFirstRandomByEspecialidadeAndFreeData(especialidade, data);
     }
 
-    public void cancelar(ConsultaCancelarDto consultaCancelarDto) {
+    public Consulta cancelar(ConsultaCancelarDto consultaCancelarDto) {
         var consulta = consultaRepository.findById(consultaCancelarDto.id()).orElseThrow(() -> new ValidationException("Consulta não encontrada!"));
         consultaCancelarValidators.forEach(v -> v.validate(consultaCancelarDto));
         consulta.cancelar(consultaCancelarDto.motivoCancelamento());
+        return consulta;
     }
 }

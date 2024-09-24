@@ -1,9 +1,10 @@
 package med.voll.api.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import med.voll.api.dto.ConsultaCancelarDto;
 import med.voll.api.dto.ConsultaDetaisDto;
 import med.voll.api.dto.ConsultaDto;
+import med.voll.api.model.Consulta;
 import med.voll.api.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,4 +29,10 @@ public class ConsultaController {
         return ResponseEntity.created(uri).body(new ConsultaDetaisDto(consulta));
     }
 
+    @PostMapping
+    @RequestMapping("/cancelar")
+    public ResponseEntity<ConsultaDetaisDto> cancelar(@RequestBody ConsultaCancelarDto consultaCancelarDto) {
+        var consulta = consultaService.cancelar(consultaCancelarDto);
+        return ResponseEntity.ok(new ConsultaDetaisDto(consulta));
+    }
 }
